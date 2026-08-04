@@ -2,17 +2,17 @@
 
 ## Introduction
 
-I built this project using a 2023 dataset of data job postings collected by Luke Barousse. The data skews heavily toward the US, but I wanted to see what it could still tell us about remote work — where skills tend to matter more than geography, and where a US-centric dataset can still be genuinely useful to someone job-hunting anywhere else.
+I built this project using a 2023 dataset of data job postings collected by Luke Barousse. The data skews heavily toward the US, but I wanted to see what it could still tell us about remote work, where skills tend to matter more than geography, and where a US-centric dataset can still be genuinely useful to someone job-hunting anywhere else.
 
-Instead of jumping straight into analysis, I first spent time cleaning and structuring the raw dataset myself: handling missing values, parsing nested fields, standardizing formats. It's a step that doesn't show up in most portfolio projects, but it's usually where the real work happens — and where I wanted to practice fundamentals I'm building as I move between data analysis and data engineering.
+Instead of jumping straight into analysis, I first spent time cleaning and structuring the raw dataset myself: handling missing values, parsing nested fields, standardizing formats. It's a step that doesn't show up in most portfolio projects, but it's usually where the real work happens, and where I wanted to practice fundamentals I'm building as I move between data analysis and data engineering.
 
 From there, I focused the analysis around a few concrete questions:
 
-1. **Data Cleaning & Structuring** — How can raw job posting data be transformed into a clean, analysis-ready dataset?
-2. **Remote Landscape** — Which countries and roles offer the most remote data job opportunities?
-3. **Remote Salary Premium** — Does remote work pay more or less than on-site roles, and does this vary by skill or role?
-4. **Top Skills for Remote Roles** — Which skills are most in-demand and best-paid specifically for remote positions?
-5. **Beyond the US** — What does the data job market look like when we exclude US-based postings?
+1. **Data Cleaning & Structuring**: How can raw job posting data be transformed into a clean, analysis-ready dataset?
+2. **Remote Landscape**: Which countries and roles offer the most remote data job opportunities?
+3. **Remote Salary Premium**: Does remote work pay more or less than on-site roles, and does this vary by skill or role?
+4. **Top Skills for Remote Roles**: Which skills are most in-demand and best-paid specifically for remote positions?
+5. **Beyond the US**: What does the data job market look like when we exclude US-based postings?
 
 I chose to center this project on remote work specifically because it's the one angle where a US-heavy dataset still translates directly into something I can use: if a skill or role consistently shows up as valuable for remote positions, that's a signal worth acting on regardless of where I'm located. Rather than treating the US bias as a limitation to work around, I wanted to make it part of the story.
 
@@ -23,7 +23,7 @@ Full code and notebooks: [lien vers ton repo]
 
 ## Data Preparation & Cleanup
 
-Before diving into analysis, I spent time cleaning and structuring the raw dataset — a step that's easy to skip in portfolio projects, but where most of the real work actually happens.
+Before diving into analysis, I spent time cleaning and structuring the raw dataset, a step that's easy to skip in portfolio projects, but where most of the real work actually happens.
 
 ### Parsing nested columns
 
@@ -47,7 +47,7 @@ df['job_type_skills'] = df['job_type_skills'].apply(parse_skills)
 df['job_posted_date'] = pd.to_datetime(df['job_posted_date'])
 ```
 
-### Handling missing values — without losing data
+### Handling missing values, without losing data
 
 Rather than dropping every row with a missing value, I checked each affected column individually to see whether the missing data was randomly distributed or concentrated in specific segments.
 
@@ -67,13 +67,13 @@ for col in cols_to_check:
 
 **Findings**:
 - `job_location` (0.13% missing) and `job_country` (0.01% missing): negligible volume, left as-is.
-- `job_schedule_type` (1.6% missing): missing values were concentrated in a few countries (notably the Philippines and Malaysia) rather than randomly spread. Given the low overall volume, these rows were kept and filled instead of dropped:
+- `job_schedule_type` (1.6% missing): missing values were concentrated in a few countries, notably the Philippines and Malaysia, rather than randomly spread. Given the low overall volume, these rows were kept and filled instead of dropped:
 
 ```python
 df['job_schedule_type'] = df['job_schedule_type'].fillna('Not Specified')
 ```
 
-- `job_skills` / `job_type_skills`: left untouched at this stage — missing values are filtered out only within the specific analyses that require skill data.
+- `job_skills` / `job_type_skills`: left untouched at this stage; missing values are filtered out only within the specific analyses that require skill data.
 
 ### Isolating salary data
 
@@ -83,7 +83,7 @@ Only about 4% of postings include salary information. Rather than dropping the o
 df_salary = df[df['salary_year_avg'].notna() | df['salary_hour_avg'].notna()].copy()
 ```
 
-**Result**: 32,665 rows out of 785,741 (~4.2%) — kept separate so the main dataset stays fully usable for non-salary analyses.
+**Result**: 32.7K rows out of 785.7K (about 4.2%), kept separate so the main dataset stays fully usable for non-salary analyses.
 
 ### Validating the remote work flag
 
@@ -93,7 +93,7 @@ Since this project focuses heavily on remote opportunities, I checked whether `j
 df[df['job_work_from_home'] == True]['job_location'].value_counts().head(10)
 ```
 
-**Finding**: Every row flagged as remote had `job_location == 'Anywhere'`, with no exceptions — confirming `job_work_from_home` as a fully reliable single source of truth for remote status. Remote postings make up **8.85%** of the dataset (69,552 out of 785,741 rows).
+**Finding**: Every row flagged as remote had `job_location == 'Anywhere'`, with no exceptions, confirming `job_work_from_home` as a fully reliable single source of truth for remote status. Remote postings make up **8.85%** of the dataset (69.6K out of 785.7K rows).
 
 ### Exporting clean data
 
@@ -102,7 +102,7 @@ df.to_parquet('../data/clean/data_jobs_clean.parquet', index=False)
 df_salary.to_parquet('../data/clean/data_jobs_salary.parquet', index=False)
 ```
 
-The `.parquet` format preserves data types (dates, booleans, parsed lists/dicts) without needing to re-parse them on reload — a small but deliberate choice to mirror a reusable data pipeline rather than a one-off cleaning script.
+The `.parquet` format preserves data types (dates, booleans, parsed lists/dicts) without needing to re-parse them on reload; a small but deliberate choice to mirror a reusable data pipeline rather than a one-off cleaning script.
 
 ---
 
@@ -110,7 +110,7 @@ The `.parquet` format preserves data types (dates, booleans, parsed lists/dicts)
 
 **Question**: Which countries and roles offer the most remote data job opportunities?
 
-Remote postings make up **8.85%** of the dataset — a relatively small slice, but one worth digging into carefully, since where the *volume* of remote jobs is highest isn't always where the *share* of remote jobs is highest.
+Remote postings make up **8.85%** of the dataset, a relatively small slice, but one worth digging into carefully, since where the *volume* of remote jobs is highest isn't always where the *share* of remote jobs is highest.
 
 ### Remote share by country
 
@@ -147,6 +147,7 @@ axes[0].tick_params(colors='white')
 axes[0].grid(False)
 axes[0].spines[['top', 'right']].set_visible(False)
 axes[0].spines[['left', 'bottom']].set_color('white')
+axes[0].xaxis.set_major_formatter(FuncFormatter(count_formatter))
 
 top_share = top_remote_share.reset_index()
 palette_share = get_dark_bg_palette(len(top_share))
@@ -167,7 +168,7 @@ plt.savefig('../images/remote_volume_vs_share.png', dpi=300, bbox_inches='tight'
 
 ![Remote Volume vs Share by Country](images/remote_volume_vs_share.png)
 
-The US, India, and the UK post the most remote jobs in absolute numbers — unsurprising, since they also post the most jobs overall. But the share of remote postings *within* each country tells a different story: Ukraine (28.7%), Turkey (26.0%), and Kazakhstan (24.6%) show a much higher proportion of remote work relative to their total job volume, despite having far smaller overall markets than the US.
+The US, India, and the UK post the most remote jobs in absolute numbers, unsurprising, since they also post the most jobs overall. But the share of remote postings *within* each country tells a different story: Ukraine (28.7%), Turkey (26.0%), and Kazakhstan (24.6%) show a much higher proportion of remote work relative to their total job volume, despite having far smaller overall markets than the US.
 
 ### Remote share by role
 
@@ -212,22 +213,72 @@ plt.savefig('../images/remote_share_by_role.png', dpi=300, bbox_inches='tight', 
 
 At the role level, volume and share align consistently: **Data Engineer** positions have a remote share of 11.4%, almost double that of **Data Analyst** roles (6.8%). Senior-level roles are also more remote-friendly than junior ones across the board.
 
-**Takeaway**: for someone building toward a hybrid Data Analyst/Data Engineer path, this is a useful signal — moving toward data engineering skills and gaining seniority seems to open up remote opportunities more reliably than focusing purely on which country posts the most jobs.
+**Takeaway**: for someone building toward a hybrid Data Analyst/Data Engineer path, this is a useful signal: moving toward data engineering skills and gaining seniority seems to open up remote opportunities more reliably than focusing purely on which country posts the most jobs.
 
 ---
+
 ## Remote Salary Premium
 
 **Question**: Does remote work pay more or less than on-site roles, and does this vary by role or skill?
 
-Remote roles show a clear overall premium — **+12% in median annual salary** ($128,830 remote vs $115,000 on-site). But this headline number hides a lot of nuance once you break it down by role.
+Remote roles show a clear overall premium: **+12% in median annual salary** ($128.8K remote vs $115K on-site). But this headline number hides a lot of nuance once you break it down by role.
 
 ### Premium by role
 
-Looking only at roles with a reliable sample size (150+ remote postings with salary data), the premium is much more modest — and sometimes negative:
+Looking only at roles with a reliable sample size (150+ remote postings with salary data), the premium is much more modest, and sometimes negative:
+
+```python
+role_salary_premium = (
+    df_salary.groupby(['job_title_short', 'job_work_from_home'])['salary_year_avg']
+    .median()
+    .unstack()
+    .rename(columns={False: 'onsite_median', True: 'remote_median'})
+)
+role_salary_premium['premium_pct'] = ((role_salary_premium['remote_median'] - role_salary_premium['onsite_median']) / role_salary_premium['onsite_median']) * 100
+
+role_counts = (
+    df_salary.groupby(['job_title_short', 'job_work_from_home'])['salary_year_avg']
+    .count()
+    .unstack()
+    .rename(columns={False: 'onsite_count', True: 'remote_count'})
+)
+role_salary_premium = role_salary_premium.join(role_counts[['remote_count']])
+```
+
+```python
+data = role_salary_premium[role_salary_premium['remote_count'] >= 150].reset_index()
+data = data.sort_values('premium_pct', ascending=True)
+
+fig, ax = plt.subplots(figsize=(10, 6))
+bg_color = '#1e1e1e'
+fig.patch.set_facecolor(bg_color)
+ax.set_facecolor(bg_color)
+
+colors = ['#8b2e3c' if val < 0 else '#c9a24b' for val in data['premium_pct']]
+
+ax.barh(data['job_title_short'], data['premium_pct'], color=colors)
+ax.axvline(0, color='white', linewidth=1)
+
+for i, (val, n) in enumerate(zip(data['premium_pct'], data['remote_count'])):
+    label_x = val + (1.5 if val >= 0 else -1.5)
+    ha = 'left' if val >= 0 else 'right'
+    ax.text(label_x, i, f'{val:.1f}% (n={n})', va='center', ha=ha, color='white', fontsize=9)
+
+ax.set_title('Remote Salary Premium by Role (n >= 150)', fontsize=13, weight='bold', color='white')
+ax.set_xlabel('Remote Salary Premium (%)', color='white')
+ax.set_ylabel('')
+ax.tick_params(colors='white')
+ax.grid(False)
+ax.spines[['top', 'right']].set_visible(False)
+ax.spines[['left', 'bottom']].set_color('white')
+
+plt.tight_layout()
+plt.savefig('../images/remote_salary_premium_by_role.png', dpi=300, bbox_inches='tight', facecolor=bg_color)
+```
 
 ![Remote Salary Premium by Role](images/remote_salary_premium_by_role.png)
 
-**Data Scientist** (+8.8%) and **Data Engineer** (+4.0%) show a small positive premium, while **Data Analyst** (-3.6%) and **Senior Data Analyst** (-5.6%) actually pay slightly *less* remotely than on-site. This means the global +12% premium is mostly driven by a mix of roles and seniority levels — not something Analyst/Engineer-track roles can count on by default.
+**Data Scientist** (+8.8%) and **Data Engineer** (+4.0%) show a small positive premium, while **Data Analyst** (-3.6%) and **Senior Data Analyst** (-5.6%) actually pay slightly less remotely than on-site. This means the global +12% premium is mostly driven by a mix of roles and seniority levels, not something Analyst/Engineer-track roles can count on by default.
 
 ### Top paying skills
 
@@ -247,12 +298,171 @@ skill_salary = skill_salary[skill_salary['postings_count'] >= 50]
 top_paying_skills = skill_salary.sort_values('median_salary', ascending=False).head(15)
 ```
 
+```python
+data = top_paying_skills.head(5).reset_index().sort_values('median_salary', ascending=True)
+
+fig, ax = plt.subplots(figsize=(9, 5))
+bg_color = '#1e1e1e'
+fig.patch.set_facecolor(bg_color)
+ax.set_facecolor(bg_color)
+
+colors = sns.color_palette('Blues', n_colors=len(data) + 4)[4:]
+ax.barh(data['job_skills'], data['median_salary'], color=colors)
+
+for i, (val, n) in enumerate(zip(data['median_salary'], data['postings_count'])):
+    ax.text(val + 1500, i, f'${val/1000:,.0f}K (n={n})', va='center', color='white', fontsize=9)
+
+ax.set_title('Top 5 Paying Skills, Remote Postings', fontsize=13, weight='bold', color='white')
+ax.set_xlabel('Median Annual Salary ($)', color='white')
+ax.set_ylabel('')
+ax.tick_params(colors='white')
+ax.grid(False)
+ax.spines[['top', 'right']].set_visible(False)
+ax.spines[['left', 'bottom']].set_color('white')
+ax.xaxis.set_major_formatter(FuncFormatter(currency_formatter))
+ax.set_xlim(0, data['median_salary'].max() * 1.15)
+
+plt.tight_layout()
+plt.savefig('../images/top_paying_remote_skills.png', dpi=300, bbox_inches='tight', facecolor=bg_color)
+```
+
 ![Top 5 Paying Remote Skills](images/top_paying_remote_skills.png)
 
-The highest-paying remote skills are dominated by cloud/data engineering tools (Kubernetes, Terraform, GCP, Airflow, Kafka — ~$145K median) and machine learning frameworks (PyTorch, TensorFlow, Scikit-learn — $145K–$150K). Notably, traditional analyst tools like Excel, Tableau, or Power BI don't appear anywhere near this top tier.
+The highest-paying remote skills are dominated by cloud/data engineering tools (Kubernetes, Terraform, GCP, Airflow, Kafka, all around $145K median) and machine learning frameworks (PyTorch, TensorFlow, Scikit-learn, $145K to $150K). Notably, traditional analyst tools like Excel, Tableau, or Power BI don't appear anywhere near this top tier.
 
-I also checked whether broader skill *categories* (programming, cloud, databases, etc.) showed any salary difference — they didn't. The distributions were nearly identical across categories, meaning the specific skill matters far more than the category it belongs to.
+I also checked whether broader skill categories (programming, cloud, databases, and so on) showed any salary difference; they didn't. The distributions were nearly identical across categories, meaning the specific skill matters far more than the category it belongs to.
 
-**Takeaway**: the clearest path to higher-paying remote work isn't the job title alone — it's specific technical skills, particularly around cloud infrastructure, orchestration, and machine learning.
+**Takeaway**: the clearest path to higher-paying remote work isn't the job title alone, it's specific technical skills, particularly around cloud infrastructure, orchestration, and machine learning.
 
 ---
+
+## Top Skills for Remote Roles
+
+**Question**: Which skills are most in-demand for remote data roles, and which offer the best combination of demand and pay?
+
+Python and SQL lead by a wide margin in remote job postings, each appearing in 40K+ listings. They're followed by a mix of cloud platforms (AWS, Azure, GCP), BI tools (Tableau, Power BI, Excel), and data engineering tools (Spark, Airflow, Databricks, Snowflake).
+
+Demand alone doesn't tell the full story, though: some of the most requested skills (like Excel or Tableau) rank among the lowest-paying ones, while some of the highest-paying skills aren't necessarily the most requested. Cross-referencing both metrics gives a clearer picture of where the real value lies.
+
+```python
+df_remote_salary = df_salary[
+    (df_salary['job_work_from_home'] == True) & 
+    (df_salary['job_skills'].notna())
+].copy()
+df_remote_salary = df_remote_salary.explode('job_skills')
+
+skill_stats = (
+    df_remote_salary.groupby('job_skills')['salary_year_avg']
+    .agg(['median', 'count'])
+    .rename(columns={'median': 'median_salary', 'count': 'salary_postings_count'})
+)
+
+demand_stats = df_remote_exploded['job_skills'].value_counts().rename('demand_count')
+
+skill_combined = skill_stats.join(demand_stats, how='inner')
+skill_combined = skill_combined[skill_combined['salary_postings_count'] >= 50]
+```
+
+```python
+fig, ax = plt.subplots(figsize=(12, 8))
+bg_color = '#1e1e1e'
+fig.patch.set_facecolor(bg_color)
+ax.set_facecolor(bg_color)
+
+data = skill_combined.reset_index().sort_values('demand_count', ascending=False).head(10)
+
+scatter = ax.scatter(
+    data['demand_count'], 
+    data['median_salary'], 
+    s=250,
+    c=data['median_salary'], 
+    cmap='Blues',
+    alpha=0.9,
+    edgecolors='white',
+    linewidths=0.8
+)
+
+for _, row in data.iterrows():
+    ax.annotate(
+        row['job_skills'], 
+        (row['demand_count'], row['median_salary']),
+        textcoords="offset points", xytext=(8, 8),
+        fontsize=10, color='white', weight='bold'
+    )
+
+ax.set_title('Top 10 Remote Skills: Demand vs Salary', fontsize=14, weight='bold', color='white')
+ax.set_xlabel('Demand (Number of Postings)', color='white')
+ax.set_ylabel('Median Annual Salary ($)', color='white')
+ax.tick_params(colors='white')
+ax.grid(False)
+ax.spines[['top', 'right']].set_visible(False)
+ax.spines[['left', 'bottom']].set_color('white')
+ax.yaxis.set_major_formatter(FuncFormatter(currency_formatter))
+ax.xaxis.set_major_formatter(FuncFormatter(count_formatter))
+ax.margins(x=0.15, y=0.15)
+
+plt.tight_layout()
+plt.savefig('../images/demand_vs_salary_scatter.png', dpi=300, bbox_inches='tight', facecolor=bg_color)
+```
+
+![Demand vs Salary](images/demand_vs_salary_scatter.png)
+
+Among the top 10 most requested skills, Python stands out as the clearest sweet spot: highest demand, paired with a strong median salary. SQL follows a similar pattern at a slightly lower salary. Spark, AWS, and Java, on the other hand, show lower demand but rank among the highest-paying skills in this group, pointing to a smaller but well-compensated niche.
+
+**Takeaway**: Python is the safest, highest-leverage skill to prioritize, given its balance of demand and pay. Beyond that, deepening skills in cloud and big data tools (Spark, AWS) offers a smaller but higher-paying niche worth targeting for differentiation.
+
+---
+
+## Beyond the US
+
+**Question**: What does the data job market look like when US-based postings are excluded?
+
+Non-US postings account for 73.7% of the dataset by volume, so this isn't a purely US-only dataset despite the earlier salary reporting bias. That said, only 22.9% of salary-labeled postings come from outside the US, meaning US employers disclose salary information proportionally more often; a bias worth keeping in mind when reading the results below.
+
+```python
+df_non_us = df[df['job_country'] != 'United States'].copy()
+df_salary_non_us = df_salary[df_salary['job_country'] != 'United States'].copy()
+
+df_non_us_skills = df_non_us[df_non_us['job_skills'].notna()].copy()
+df_non_us_exploded = df_non_us_skills.explode('job_skills')
+top_skills_non_us = df_non_us_exploded['job_skills'].value_counts().head(15)
+
+salary_comparison_non_us = (
+    df_salary_non_us.groupby('job_work_from_home')['salary_year_avg']
+    .agg(['median', 'count'])
+    .rename(index={False: 'On-site', True: 'Remote'})
+)
+```
+
+The top in-demand skills outside the US closely mirror the global ranking, with Python and SQL still leading by a wide margin; a good sign that the trends found earlier aren't just an artifact of US market dominance. The main difference: Hadoop and Scala appear in this non-US top 15, hinting at a slightly stronger presence of traditional big data stacks outside the US.
+
+The remote salary premium, meanwhile, is even stronger outside the US: **+20.4%** (vs +12% globally), driven mainly by a lower on-site median outside the US ($108.9K vs $115K globally), while the remote median stays close to the global figure ($131K vs $128.8K). This is based on a smaller sample (662 non-US remote postings with salary data), so it should be read as a strong directional signal rather than a precise estimate.
+
+**Takeaway**: the patterns found throughout this project hold up, and in some cases strengthen, once US postings are excluded. Despite the dataset's US-heavy origin, its core insights remain broadly relevant beyond that market.
+
+---
+
+## Conclusion
+
+This project set out to answer a simple question: what can a US-heavy dataset still tell someone who isn't targeting the US market, especially if that person is aiming for remote work? Across five notebooks, a consistent picture emerged.
+
+Remote work is still a small slice of the market overall (8.85%), but it's not evenly distributed. Countries with smaller overall job volume, like Ukraine, Turkey, and Kazakhstan, show a proportionally higher share of remote postings than the US itself. At the role level, moving from Data Analyst toward Data Engineer roughly doubles the remote job share (6.8% to 11.4%), and seniority consistently helps too.
+
+Salary tells a more nuanced story. The global remote premium (+12%) looked strong at first, but breaking it down by role showed that Analyst-track roles see little to no premium, and sometimes a slight penalty, once low-sample roles are filtered out. What actually drives higher pay in remote roles isn't the job title, it's specific technical skills: cloud infrastructure (Kubernetes, Terraform, GCP), orchestration tools (Airflow, Kafka), and machine learning frameworks (PyTorch, TensorFlow, Scikit-learn) consistently topped the salary rankings, while traditional BI tools stayed near the bottom despite remaining in high demand.
+
+Cross-referencing demand and pay pointed to Python as the single highest-leverage skill: it's both the most requested and among the better-paid options, making it the safest skill to keep building on. Spark, AWS, and Java offer a smaller but higher-paying niche for further specialization.
+
+Finally, excluding US postings altogether didn't undermine these findings, it reinforced them. Skill demand stayed nearly identical, and the remote salary premium was even more pronounced outside the US (+20.4%), suggesting remote work may let non-US candidates access salary levels closer to global standards rather than being capped by local pay scales.
+
+**For my own path**, moving from Data Analyst toward Data Engineer/Cloud skills, while keeping Python and SQL as the foundation, looks like the most reliable way to improve both remote job prospects and long-term pay, regardless of which country I end up working from.
+
+---
+
+## Tools Used
+
+- **Python**: pandas, matplotlib, seaborn
+- **Environment**: Jupyter Notebook via VS Code, managed with conda
+- **Data source**: [Luke Barousse's Data Nerd Skills dataset](lien) (via Hugging Face `datasets`)
+
+## What I Learned
+
