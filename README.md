@@ -1,4 +1,15 @@
 # Remote Data Careers Pipeline
+![Remote Skills: Demand vs Salary](images/demand_vs_salary_scatter.png)
+
+## Key Findings
+
+- Remote postings make up **8.85%** of the dataset. Countries with smaller job markets (Ukraine, Turkey, Kazakhstan) show a proportionally higher remote share than the US.
+- The remote salary premium (**+12%** globally) is uneven: Data Analyst roles see little to no premium once low-sample roles are filtered out, while Data Engineer and Data Scientist roles see a modest positive one.
+- **Python** is the clearest sweet spot skill: highest demand, paired with a strong median salary. Cloud and ML tools (Kubernetes, PyTorch, TensorFlow) pay the most overall.
+- Demand for core skills (Python, SQL, AWS) stayed stable throughout 2023, with no major shifts across the year.
+- Excluding US postings barely changes these patterns, and the remote salary premium is even stronger outside the US (**+20.4%**), suggesting these findings hold beyond the dataset's US-heavy origin.
+
+---
 
 ## Table of Contents
 
@@ -443,6 +454,27 @@ plt.savefig('../images/demand_vs_salary_scatter.png', dpi=300, bbox_inches='tigh
 Among the top 10 most requested skills, Python stands out as the clearest sweet spot: highest demand, paired with a strong median salary. SQL follows a similar pattern at a slightly lower salary. Spark, AWS, and Java, on the other hand, show lower demand but rank among the highest-paying skills in this group, pointing to a smaller but well-compensated niche.
 
 **Takeaway**: Python is the safest, highest-leverage skill to prioritize, given its balance of demand and pay. Beyond that, deepening skills in cloud and big data tools (Spark, AWS) offers a smaller but higher-paying niche worth targeting for differentiation.
+
+### Demand over time
+
+```python
+key_skills = ['python', 'sql', 'aws', 'power bi', 'tableau']
+
+df_remote_time = df_remote_exploded[df_remote_exploded['job_skills'].isin(key_skills)].copy()
+df_remote_time['month'] = df_remote_time['job_posted_date'].dt.strftime('%b %Y')
+df_remote_time['month_sort'] = df_remote_time['job_posted_date'].dt.to_period('M')
+
+monthly_demand = (
+    df_remote_time.groupby(['month', 'month_sort', 'job_skills'])
+    .size()
+    .reset_index(name='postings')
+    .sort_values('month_sort')
+)
+```
+
+![Skill Demand Over Time](images/skill_demand_over_time.png)
+
+Python and SQL remain consistently the most requested skills throughout 2023, with no major shift in ranking across the year. No skill in this group shows a dramatic rise or decline, suggesting demand for these core skills was already stable by 2023 rather than emerging or fading.
 
 ---
 
