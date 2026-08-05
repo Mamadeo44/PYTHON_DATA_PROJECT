@@ -1,0 +1,16 @@
+name: python_data_project
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pandas
+  - matplotlib
+  - seaborn
+  - pyarrow
+  - ipykernel
+  - openpyxl
+  - pip
+  - pip:
+      - datasets
+      - ipywidgets

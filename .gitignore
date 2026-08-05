@@ -1,2 +1,21 @@
-/.DS_Store
-/test.ipynb
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Python
+__pycache__/
+*.pyc
+
+# Environment
+.env
+.venv
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data (optional: exclude raw/clean data if too large or not meant to be versioned)
+data/clean/*.parquet
+
+# VS Code
+.vscode/

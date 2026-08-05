@@ -1,5 +1,20 @@
 # Remote Data Careers Pipeline
 
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [Setup](#setup)
+3. [Data Preparation & Cleanup](#data-preparation--cleanup)
+4. [Remote Job Landscape](#remote-job-landscape)
+5. [Remote Salary Premium](#remote-salary-premium)
+6. [Top Skills for Remote Roles](#top-skills-for-remote-roles)
+7. [Beyond the US](#beyond-the-us)
+8. [Conclusion](#conclusion)
+9. [Tools Used](#tools-used)
+10. [What I Learned](#what-i-learned)
+
+---
+
 ## Introduction
 
 I built this project using a 2023 dataset of data job postings collected by Luke Barousse. The data skews heavily toward the US, but I wanted to see what it could still tell us about remote work, where skills tend to matter more than geography, and where a US-centric dataset can still be genuinely useful to someone job-hunting anywhere else.
@@ -18,6 +33,23 @@ I chose to center this project on remote work specifically because it's the one 
 
 Data source: [Luke Barousse's Data Nerd Skills dataset](lien)
 Full code and notebooks: [lien vers ton repo]
+
+---
+
+## Setup
+
+To reproduce this project locally:
+
+```bash
+git clone [lien vers ton repo]
+cd PYTHON_DATA_PROJECT
+conda env create -f environment.yml
+conda activate python_data_project
+```
+
+Then open any notebook in the `notebooks/` folder using VS Code or Jupyter.
+
+
 
 ---
 
@@ -254,7 +286,7 @@ bg_color = '#1e1e1e'
 fig.patch.set_facecolor(bg_color)
 ax.set_facecolor(bg_color)
 
-colors = ['#8b2e3c' if val < 0 else '#c9a24b' for val in data['premium_pct']]
+colors = ['#5c6773' if val < 0 else '#4c8bf5' for val in data['premium_pct']]
 
 ax.barh(data['job_title_short'], data['premium_pct'], color=colors)
 ax.axvline(0, color='white', linewidth=1)
@@ -271,6 +303,7 @@ ax.tick_params(colors='white')
 ax.grid(False)
 ax.spines[['top', 'right']].set_visible(False)
 ax.spines[['left', 'bottom']].set_color('white')
+ax.set_xlim(data['premium_pct'].min() - 6, data['premium_pct'].max() + 6)
 
 plt.tight_layout()
 plt.savefig('../images/remote_salary_premium_by_role.png', dpi=300, bbox_inches='tight', facecolor=bg_color)
