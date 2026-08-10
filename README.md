@@ -569,7 +569,6 @@ Finally, excluding US postings altogether didn't undermine these findings, it re
 
 ## What I Learned
 
-## What I Learned
 
 This project was, above all, a way to turn theoretical Python knowledge into something real. Following tutorials is one thing, but working through actual messy data forced me to make decisions I wouldn't have faced otherwise: how much to trust a missing value, when a visualization is worth keeping, when a "significant" percentage is actually just noise from a tiny sample.
 
