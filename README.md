@@ -42,7 +42,7 @@ From there, I focused the analysis around a few concrete questions:
 
 I chose to center this project on remote work specifically because it's the one angle where a US-heavy dataset still translates directly into something I can use: if a skill or role consistently shows up as valuable for remote positions, that's a signal worth acting on regardless of where I'm located. Rather than treating the US bias as a limitation to work around, I wanted to make it part of the story.
 
-Data source: [Luke Barousse's Data Nerd Skills dataset](lien)
+Data source: [Luke Barousse's Data Nerd Skills dataset](https://huggingface.co/datasets/lukebarousse/data_jobs)
 Full code and notebooks: [lien vers ton repo]
 
 ---
@@ -107,6 +107,11 @@ for col in cols_to_check:
     print("\nTop countries overall (for comparison):")
     print(overall_dist)
 ```
+| Column | Missing (%) | Top country among missing rows | Bias detected? |
+|---|---|---|---|
+| job_location | 0.13% | United States (75.4%) | Yes, minor |
+| job_schedule_type | 1.61% | Philippines (35.0%) | Yes, minor |
+| job_country | 0.01% | N/A | No |
 
 **Findings**:
 - `job_location` (0.13% missing) and `job_country` (0.01% missing): negligible volume, left as-is.
@@ -125,6 +130,10 @@ Only about 4% of postings include salary information. Rather than dropping the o
 ```python
 df_salary = df[df['salary_year_avg'].notna() | df['salary_hour_avg'].notna()].copy()
 ```
+| Dataset | Rows | % of total |
+|---|---|---|
+| Main dataset | 785,741 | 100% |
+| Salary dataset | 32,665 | 4.2% |
 
 **Result**: 32.7K rows out of 785.7K (about 4.2%), kept separate so the main dataset stays fully usable for non-salary analyses.
 
@@ -135,6 +144,9 @@ Since this project focuses heavily on remote opportunities, I checked whether `j
 ```python
 df[df['job_work_from_home'] == True]['job_location'].value_counts().head(10)
 ```
+| job_location | Count |
+|---|---|
+| Anywhere | 69,552 |
 
 **Finding**: Every row flagged as remote had `job_location == 'Anywhere'`, with no exceptions, confirming `job_work_from_home` as a fully reliable single source of truth for remote status. Remote postings make up **8.85%** of the dataset (69.6K out of 785.7K rows).
 
@@ -498,6 +510,32 @@ salary_comparison_non_us = (
     .rename(index={False: 'On-site', True: 'Remote'})
 )
 ```
+**Top 15 skills, excluding the US:**
+
+| Skill | Postings |
+|---|---|
+| python | 273,733 |
+| sql | 269,801 |
+| aws | 107,231 |
+| azure | 104,744 |
+| spark | 84,431 |
+| excel | 81,620 |
+| r | 79,639 |
+| tableau | 77,617 |
+| power bi | 71,588 |
+| java | 62,752 |
+| hadoop | 46,138 |
+| sas | 46,040 |
+| gcp | 41,640 |
+| scala | 41,365 |
+| databricks | 40,124 |
+
+**Salary comparison, excluding the US:**
+
+| | Median Salary | Count |
+|---|---|---|
+| On-site | $108,900 | 5,575 |
+| Remote | $131,064 | 662 |
 
 The top in-demand skills outside the US closely mirror the global ranking, with Python and SQL still leading by a wide margin; a good sign that the trends found earlier aren't just an artifact of US market dominance. The main difference: Hadoop and Scala appear in this non-US top 15, hinting at a slightly stronger presence of traditional big data stacks outside the US.
 
@@ -531,3 +569,16 @@ Finally, excluding US postings altogether didn't undermine these findings, it re
 
 ## What I Learned
 
+## What I Learned
+
+This project was, above all, a way to turn theoretical Python knowledge into something real. Following tutorials is one thing, but working through actual messy data forced me to make decisions I wouldn't have faced otherwise: how much to trust a missing value, when a visualization is worth keeping, when a "significant" percentage is actually just noise from a tiny sample.
+
+A few things stand out from this experience:
+
+**Data cleaning is where the real work happens.** I went in expecting it to be a quick formality before the "real" analysis, and came out realizing it's often the opposite: checking whether missing values are random or hide a bias, deciding between dropping and filling, isolating incomplete columns instead of letting them drag down an entire dataset. These aren't just technical steps, they're judgment calls, and this project is where I started building the reflexes to make them properly.
+
+**I got genuinely comfortable with Jupyter Notebook and the core Python data stack.** Pandas, matplotlib, and seaborn went from "I've used this in a tutorial" to "I know what to reach for and why." Seaborn in particular pushed me to actually dig into its documentation instead of copy-pasting examples, exploring what it could do beyond the default chart types and adapting it to the specific story I wanted each visualization to tell.
+
+**My Python fundamentals feel solid now, not just theoretical.** Data types, lists and list comprehensions, dictionaries, DataFrames and Series stopped being abstract concepts and became tools I reach for naturally. I also started paying more attention to writing code that's not just correct, but efficient: preferring vectorized pandas operations over loops when possible, and understanding why that matters once a dataset has close to 800,000 rows.
+
+Beyond the technical side, this project reinforced something less obvious but just as important: the value of documenting *why* a decision was made, not just *what* was done. Every finding in this README exists because I stopped to ask "does this actually hold up?" before writing it down, and that habit is one I plan to carry into every project going forward.
