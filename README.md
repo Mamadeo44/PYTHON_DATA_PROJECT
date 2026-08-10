@@ -1,4 +1,4 @@
-# Remote Data Careers Pipeline
+# Remote Data Careers 
 ![Remote Skills: Demand vs Salary](images/demand_vs_salary_scatter.png)
 
 ---
