@@ -1,16 +1,7 @@
 # Remote Data Careers Pipeline
 ![Remote Skills: Demand vs Salary](images/demand_vs_salary_scatter.png)
 
-## Key Findings
-
-- Remote postings make up **8.85%** of the dataset. Countries with smaller job markets (Ukraine, Turkey, Kazakhstan) show a proportionally higher remote share than the US.
-- The remote salary premium (**+12%** globally) is uneven: Data Analyst roles see little to no premium once low-sample roles are filtered out, while Data Engineer and Data Scientist roles see a modest positive one.
-- **Python** is the clearest sweet spot skill: highest demand, paired with a strong median salary. Cloud and ML tools (Kubernetes, PyTorch, TensorFlow) pay the most overall.
-- Demand for core skills (Python, SQL, AWS) stayed stable throughout 2023, with no major shifts across the year.
-- Excluding US postings barely changes these patterns, and the remote salary premium is even stronger outside the US (**+20.4%**), suggesting these findings hold beyond the dataset's US-heavy origin.
-
 ---
-
 ## Table of Contents
 
 1. [Introduction](#introduction)
@@ -45,6 +36,14 @@ I chose to center this project on remote work specifically because it's the one 
 Data source: [Luke Barousse's Data Nerd Skills dataset](https://huggingface.co/datasets/lukebarousse/data_jobs)
 Full code and notebooks: [lien vers ton repo]
 
+---
+## Key Findings
+
+- Remote postings make up **8.85%** of the dataset. Countries with smaller job markets (Ukraine, Turkey, Kazakhstan) show a proportionally higher remote share than the US.
+- The remote salary premium (**+12%** globally) is uneven: Data Analyst roles see little to no premium once low-sample roles are filtered out, while Data Engineer and Data Scientist roles see a modest positive one.
+- **Python** is the clearest sweet spot skill: highest demand, paired with a strong median salary. Cloud and ML tools (Kubernetes, PyTorch, TensorFlow) pay the most overall.
+- Demand for core skills (Python, SQL, AWS) stayed stable throughout 2023, with no major shifts across the year.
+- Excluding US postings barely changes these patterns, and the remote salary premium is even stronger outside the US (**+20.4%**), suggesting these findings hold beyond the dataset's US-heavy origin.
 ---
 
 ## Setup
