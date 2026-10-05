@@ -34,7 +34,7 @@ From there, I focused the analysis around a few concrete questions:
 I chose to center this project on remote work specifically because it's the one angle where a US-heavy dataset still translates directly into something I can use: if a skill or role consistently shows up as valuable for remote positions, that's a signal worth acting on regardless of where I'm located. Rather than treating the US bias as a limitation to work around, I wanted to make it part of the story.
 
 Data source: [Luke Barousse's Data Nerd Skills dataset](https://huggingface.co/datasets/lukebarousse/data_jobs)
-Full code and notebooks: [lien vers ton repo]
+Full code and notebooks: (https://github.com/Mamadeo44/PYTHON_DATA_PROJECT)
 
 ---
 ## Key Findings
